@@ -1,0 +1,5 @@
+chatterbot
+flask
+requests
+python-Levenshtein
+text-blob
