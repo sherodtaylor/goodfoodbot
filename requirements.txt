@@ -2,4 +2,6 @@ chatterbot
 flask
 requests
 python-Levenshtein
-text-blob
+textblob
+yelp
+nltk

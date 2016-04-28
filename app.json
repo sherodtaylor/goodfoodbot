@@ -1,0 +1,5 @@
+{
+  "name": "Good Food Bot",
+  "description": "python app bot",
+  "image": "heroku/python"
+}
