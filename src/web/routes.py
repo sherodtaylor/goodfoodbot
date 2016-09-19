@@ -3,7 +3,6 @@ import messaging
 from messaging import templates
 
 from flask import request
-from bot.chatbot import GoodFoodBot
 from textblob import TextBlob
 from textblob.np_extractors import ConllExtractor
 
@@ -24,7 +23,6 @@ def handle_events(messaging_events):
 
 
 def handle_message(sender, text):
-  response = bot.get_response(text) 
   blob = TextBlob(text, np_extractor=extractor)
   for noun in blob.noun_phrases:
     print blob.noun_phrases
