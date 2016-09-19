@@ -11,7 +11,6 @@ from yelp.oauth1_authenticator import Oauth1Authenticator
 import json
 from os import environ
 
-bot = GoodFoodBot()
 extractor = ConllExtractor()
 
 def handle_events(messaging_events):
