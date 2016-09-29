@@ -32,6 +32,7 @@ def handle_message(sender, text):
   if len(blob.noun_phrases) == 0:
     return 'okay', 200
 
+  print blob
   results = search_yelp(blob.noun_phrases)
   print results
 
@@ -42,12 +43,15 @@ def handle_message(sender, text):
       print business
       buttons = []
 
-      elements.append({
+      restaurant = {
         'buttons': buttons,
         'title': business.name,
-        'subtitle': business.snippet_text  ,
-        'image_url': business.image_url.replace('ms.jpg', 'l.jpg')
-      })
+        'subtitle': business.snippet_text
+      }
+
+
+      if business.image_url is not None:
+        restaurant.image_url = business.image_url.replace('ms.jpg', 'l.jpg')
 
       print business.__dict__
 
