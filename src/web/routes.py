@@ -3,15 +3,15 @@ import messaging
 from messaging import templates
 
 from flask import request
-from textblob import TextBlob
-from textblob.np_extractors import ConllExtractor
 
+from spacy.en import English
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
 import json
 from os import environ
+from spacy.parts_of_speech import ADJ, NOUN
 
-extractor = ConllExtractor()
+nlp = English()
 
 def handle_events(messaging_events):
   for event in messaging_events:
@@ -22,18 +22,17 @@ def handle_events(messaging_events):
 
 
 def handle_message(sender, text):
-  blob = TextBlob(text, np_extractor=extractor)
-  for noun in blob.noun_phrases:
-    print blob.noun_phrases
+  text_doc = en_nlp(text);
 
-  for word, tag in blob.tags:
-    print word + ' --> ' + tag
+  location = 'New York'
+  search_terms = ' '.join([tok.text for tok in text_doc if tok.pos == ADJ or tok.pos == NOUN])
 
-  if len(blob.noun_phrases) == 0:
-    return 'okay', 200
+  try:
+    location = next(ent.text for ent in list(text_doc.ents) if ent.label_ == 'GPE')
+  except:
+    print 'Error'
 
-  print blob
-  results = search_yelp(blob.noun_phrases)
+  results = search_yelp(location, search_terms)
   print results
 
   elements = []
@@ -73,7 +72,7 @@ def handle_message(sender, text):
   print messaging.send_message(message).text
   return 'okay', 200
 
-def search_yelp(nouns):
+def search_yelp(location, search_terms):
   auth = Oauth1Authenticator(
     consumer_key=environ.get('YELP_CONSUMER_KEY'),
     consumer_secret=environ.get('YELP_CONSUMER_SECRET'),
@@ -84,8 +83,8 @@ def search_yelp(nouns):
   terms = reduce(lambda prev, curr: prev + ' ' + curr, nouns, ''),
   print terms
   client = Client(auth)
-  return client.search('New York, NY', **{
-    'term': nouns[0],
+  return client.search(location, **{
+    'term': search_terms,
     'limit': 3,
     'category_filter': 'restaurants'
   });
@@ -94,6 +93,13 @@ def setup_routes(app):
   @app.route("/")
   def hello():
   	return 'hello'
+
+  @app.route("/test")
+  def test():
+
+    return 'hi', 200
+
+
 
   @app.route("/webhook/", methods=['POST', 'GET'])
   def webhook():

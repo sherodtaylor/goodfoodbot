@@ -1,6 +1,5 @@
 from web import run_app
 import logging
-import nltk
 
 
 logging.basicConfig(level=logging.DEBUG)

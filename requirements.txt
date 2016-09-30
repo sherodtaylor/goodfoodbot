@@ -1,7 +1,4 @@
-chatterbot
 flask
 requests
-python-Levenshtein
-textblob
 yelp
-nltk
+spacy

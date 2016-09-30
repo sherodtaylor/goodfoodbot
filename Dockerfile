@@ -1,6 +1,7 @@
 FROM heroku/python
 
-RUN mkdir /app/nltk_data
-ENV NLTK_DATA /app/nltk_data
 RUN pip install -r requirements.txt
-RUN python -m textblob.download_corpora
+
+RUN python -m spacy.en.download --force all
+
+RUN python -c "import spacy; spacy.load('en'); print('OK')"
